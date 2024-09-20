@@ -1,6 +1,6 @@
-package br.com.fiap.spo.pedido.dao;
+package br.com.fiap.spo.dao;
 
-import br.com.fiap.spo.pedido.model.Produto;
+import br.com.fiap.spo.model.Produto;
 
 public class EstoqueDao {
 

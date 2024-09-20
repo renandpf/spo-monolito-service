@@ -1,13 +1,13 @@
-package br.com.fiap.spo.pedido.service;
+package br.com.fiap.spo.service;
 
 import java.util.Map;
 
-import br.com.fiap.spo.pedido.dao.EstoqueDao;
-import br.com.fiap.spo.pedido.dao.PedidoDao;
-import br.com.fiap.spo.pedido.exception.QuantidadeSolicitadaExcedeDisponivelExcetption;
-import br.com.fiap.spo.pedido.model.Pedido;
-import br.com.fiap.spo.pedido.model.Produto;
-import br.com.fiap.spo.pedido.pagamento.PagamentoExternoPort;
+import br.com.fiap.spo.dao.EstoqueDao;
+import br.com.fiap.spo.dao.PedidoDao;
+import br.com.fiap.spo.exception.QuantidadeSolicitadaExcedeDisponivelExcetption;
+import br.com.fiap.spo.model.Pedido;
+import br.com.fiap.spo.model.Produto;
+import br.com.fiap.spo.pagamento.PagamentoExternoPort;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 

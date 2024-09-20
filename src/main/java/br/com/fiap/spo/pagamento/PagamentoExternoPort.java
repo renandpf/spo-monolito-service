@@ -1,6 +1,6 @@
-package br.com.fiap.spo.pedido.pagamento;
+package br.com.fiap.spo.pagamento;
 
-import br.com.fiap.spo.pedido.model.Pedido;
+import br.com.fiap.spo.model.Pedido;
 
 public interface PagamentoExternoPort {
 

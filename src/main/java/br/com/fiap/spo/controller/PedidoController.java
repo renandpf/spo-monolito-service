@@ -1,7 +1,7 @@
-package br.com.fiap.spo.pedido.controller;
+package br.com.fiap.spo.controller;
 
-import br.com.fiap.spo.pedido.model.Pedido;
-import br.com.fiap.spo.pedido.service.PedidoService;
+import br.com.fiap.spo.model.Pedido;
+import br.com.fiap.spo.service.PedidoService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

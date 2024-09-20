@@ -1,4 +1,4 @@
-package br.com.fiap.spo.pedido.model;
+package br.com.fiap.spo.model;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
