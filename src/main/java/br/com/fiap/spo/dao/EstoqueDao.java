@@ -1,16 +1,57 @@
 package br.com.fiap.spo.dao;
 
-import br.com.fiap.spo.model.Produto;
+import org.springframework.stereotype.Component;
 
+import br.com.fiap.spo.dao.repository.EstoqueRepository;
+import br.com.fiap.spo.exception.ErroAoAcessarDatabaseException;
+import br.com.fiap.spo.exception.EstoqueNaoEncontradoException;
+import br.com.fiap.spo.model.Estoque;
+import br.com.fiap.spo.model.Produto;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Component
+@AllArgsConstructor
 public class EstoqueDao {
 
+	private final EstoqueRepository estoqueRepository;
+	
 	public Long obtemQuantidadeDisponivel(Produto produto) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			Estoque estoque = getEstoqueById(produto);
+			
+			//Esta regra poderia estar dentro do model. Proposital ficou aqui pra simular um "legado".
+			return estoque.getQuantidadeDisponivel() - estoque.getQuantidadeReservada();
+			
+		} catch (EstoqueNaoEncontradoException e) {
+			log.warn("Estoque não encontrado. id={}", produto.getId());
+			throw e;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new ErroAoAcessarDatabaseException();
+		}
+		
 	}
 
 	public void reserva(Produto produto, Long quantidadeSolicitada) {
-		// TODO Auto-generated method stub
+		try {
+			Estoque estoque = getEstoqueById(produto);
+			estoque.adicionarReserva(quantidadeSolicitada);
+			
+			estoqueRepository.save(estoque);
+			
+		} catch (EstoqueNaoEncontradoException e) {
+			log.warn("Estoque não encontrado. id={}", produto.getId());
+			throw e;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new ErroAoAcessarDatabaseException();
+		}
 	}
-
+	
+	private Estoque getEstoqueById(Produto produto) {
+		return estoqueRepository.findById(produto.getId())
+		.orElseThrow(EstoqueNaoEncontradoException::new);
+	}
 }

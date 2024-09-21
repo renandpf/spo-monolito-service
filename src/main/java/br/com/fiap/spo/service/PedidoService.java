@@ -2,6 +2,8 @@ package br.com.fiap.spo.service;
 
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import br.com.fiap.spo.dao.EstoqueDao;
 import br.com.fiap.spo.dao.PedidoDao;
 import br.com.fiap.spo.exception.QuantidadeSolicitadaExcedeDisponivelExcetption;
@@ -12,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Service
 public class PedidoService {
 
 	private EstoqueDao estoqueDao;

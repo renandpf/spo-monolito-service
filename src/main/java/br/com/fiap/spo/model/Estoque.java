@@ -18,4 +18,9 @@ public class Estoque {
     @OneToOne
     @JoinColumn(name = "produtoId", insertable = false, updatable = false)
     private Produto produto;
+    
+    
+    public void adicionarReserva(Long quantidade) {
+    	quantidadeReservada += quantidade;
+    }
 }
