@@ -27,4 +27,13 @@ public class Estoque {
     public void adicionarReserva(Long quantidade) {
     	quantidadeReservada += quantidade;
     }
+    
+    public void efetuarBaixa(Long quantidade) {
+    	quantidadeDisponivel -= quantidade;
+    	quantidadeReservada -= quantidade;
+    }
+    
+    public void efetuarCancelamento(Long quantidade) {
+    	quantidadeReservada -= quantidade;
+    }
 }

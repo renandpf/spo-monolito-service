@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 import br.com.fiap.spo.model.Pedido;
+import br.com.fiap.spo.model.StatusPagamento;
 import br.com.fiap.spo.pagamento.PagamentoExternoPort;
 import lombok.extern.slf4j.Slf4j;
 
@@ -16,6 +17,13 @@ public class PagamentoMock implements PagamentoExternoPort {
 	public String solicitacaoPagamento(Pedido pedido) {
 		log.warn("## PAGAMENTO MOCK ##");
 		return UUID.randomUUID().toString();
+	}
+
+	@Override
+	public StatusPagamento obterStatus(String pagamentoExternoId) {
+		log.warn("## PAGAMENTO MOCK ##");
+		//return StatusPagamento.FALHOU;
+		return StatusPagamento.SUCESSO;
 	}
 
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.fiap.spo.exception.StatusPedidoInvalidoException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,9 +15,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Getter
+@Slf4j
 public class Pedido {
 
 	@Id
@@ -25,6 +28,8 @@ public class Pedido {
 
 	private LocalDateTime dataHora;
 
+	private StatusPedido status;
+	
 	@Setter
 	private String identificadorPagamentoExterno;
 
@@ -34,6 +39,9 @@ public class Pedido {
 	public Pedido() {
 		if(dataHora == null) {
 			dataHora = LocalDateTime.now();
+		}
+		if(status == null) {
+			status = StatusPedido.ABERTO;
 		}
 	}
 
@@ -57,4 +65,47 @@ public class Pedido {
 		return itens.stream().map(Item::getPreco).reduce(BigDecimal.ZERO, BigDecimal::add); 
 	}
 
+	public void fechar() {
+		if(status.equals(StatusPedido.ABERTO)) {
+			status = StatusPedido.FECHADO;
+		} else {
+			log.warn("Status do pedido não permite esta operação. statusAtual={}", status);
+			throw new StatusPedidoInvalidoException();
+		}
+	}
+	
+	public void cancelar() {
+		if(status.equals(StatusPedido.ABERTO)) {
+			status = StatusPedido.CANCELADO;
+		} else {
+			log.warn("Status do pedido não permite esta operação. statusAtual={}", status);
+			throw new StatusPedidoInvalidoException();
+		}
+	}
+	
+	public void efetuarBaixaEstoque() {
+		if(status.equals(StatusPedido.ABERTO)) {
+			itens.forEach(i -> {
+				Estoque estoque = i.getProduto().getEstoque();
+				estoque.efetuarBaixa(i.getQuantidade());
+			});
+		} else {
+			log.warn("Status do pedido não permite esta operação. statusAtual={}", status);
+			throw new StatusPedidoInvalidoException();
+		}
+
+		
+	}
+
+	public void cancelarReservaEstoque() {
+		if(status.equals(StatusPedido.ABERTO)) {
+			itens.forEach(i -> {
+				Estoque estoque = i.getProduto().getEstoque();
+				estoque.efetuarCancelamento(i.getQuantidade());
+			});
+		} else {
+			log.warn("Status do pedido não permite esta operação. statusAtual={}", status);
+			throw new StatusPedidoInvalidoException();
+		}
+	}
 }
