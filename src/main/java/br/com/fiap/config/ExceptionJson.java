@@ -1,5 +1,6 @@
-package br.com.fiap.starter.exception;
+package br.com.fiap.config;
 
+import br.com.fiap.spo.exception.SystemBaseException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package br.com.fiap.starter.exception;
+package br.com.fiap.spo.exception;
 
 public abstract class SystemBaseException extends RuntimeException {
 	private static final long serialVersionUID = 443911183945646720L;

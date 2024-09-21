@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import br.com.fiap.starter.exception.ExceptionJson;
-import br.com.fiap.starter.exception.SystemBaseException;
+import br.com.fiap.spo.exception.SystemBaseException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
