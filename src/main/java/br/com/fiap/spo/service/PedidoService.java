@@ -6,15 +6,17 @@ import org.springframework.stereotype.Service;
 
 import br.com.fiap.spo.dao.EstoqueDao;
 import br.com.fiap.spo.dao.PedidoDao;
-import br.com.fiap.spo.exception.QuantidadeSolicitadaExcedeDisponivelExcetption;
+import br.com.fiap.spo.exception.QuantidadeSolicitadaExcedeDisponivelException;
 import br.com.fiap.spo.model.Pedido;
 import br.com.fiap.spo.model.Produto;
 import br.com.fiap.spo.pagamento.PagamentoExternoPort;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@AllArgsConstructor
 public class PedidoService {
 
 	private EstoqueDao estoqueDao;
@@ -48,7 +50,7 @@ public class PedidoService {
 		if(quantidadeSolicitada > quantidadeDisponivel) {
 			log.warn("Quantidade solicitada excede o valor disponível: quantidadeSolicitada={}, quantidadeDisponivel={}", 
 					quantidadeSolicitada, quantidadeDisponivel);
-			throw new QuantidadeSolicitadaExcedeDisponivelExcetption();
+			throw new QuantidadeSolicitadaExcedeDisponivelException();
 		}
 	}
 
