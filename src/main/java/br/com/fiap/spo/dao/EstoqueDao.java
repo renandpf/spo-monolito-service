@@ -19,34 +19,6 @@ public class EstoqueDao {
 
 	private final EstoqueRepository estoqueRepository;
 	
-	public void efetuarBaixa(Pedido pedido) {
-		try {
-			pedido.efetuarBaixaEstoque();
-			pedido.getItens().forEach(i -> estoqueRepository.save(i.getProduto().getEstoque()));
-			
-		} catch (StatusPedidoInvalidoException e) {
-			throw e;
-		
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new ErroAoAcessarDatabaseException();
-		}
-	}
-
-	public void cancelarReserva(Pedido pedido) {
-		try {
-			pedido.cancelarReservaEstoque();
-			pedido.getItens().forEach(i -> estoqueRepository.save(i.getProduto().getEstoque()));
-			
-		} catch (StatusPedidoInvalidoException e) {
-			throw e;
-		
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new ErroAoAcessarDatabaseException();
-		}
-	}
-
 	public Optional<Estoque> obtemPorId(Long id) {
 		try {
 			return estoqueRepository.findById(id);

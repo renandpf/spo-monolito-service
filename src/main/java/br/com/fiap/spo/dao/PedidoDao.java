@@ -75,4 +75,13 @@ public class PedidoDao {
 			throw new ErroAoAcessarDatabaseException();
 		}
 	}
+
+	public Long salvar(Pedido pedido) {
+		try {
+			return pedidoRepository.save(pedido).getId();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new ErroAoAcessarDatabaseException();
+		}
+	}
 }

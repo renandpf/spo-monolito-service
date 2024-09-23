@@ -12,9 +12,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @AllArgsConstructor
-@Slf4j
 public class PagamentoService {
 	
 	private final PagamentoExternoPort pagamentoExternoPort;
@@ -26,7 +26,7 @@ public class PagamentoService {
 		
 		var statusPagamento = pagamentoExternoPort.obterStatus(pagamentoExternoId);
 		
-		Pedido pedido = obterPedido(pagamentoExternoId);
+		var pedido = obterPedido(pagamentoExternoId);
 		
 		processaEstoque(statusPagamento, pedido);
 		processaPedido(statusPagamento, pedido);
@@ -42,18 +42,19 @@ public class PagamentoService {
 
 	private void processaEstoque(StatusPagamento statusPagamento, Pedido pedido) {
 		if(statusPagamento.equals(StatusPagamento.SUCESSO)) {
-			estoqueDao.efetuarBaixa(pedido);
+			pedido.efetuarBaixaEstoque();
 		} else {
-			estoqueDao.cancelarReserva(pedido);
+			pedido.cancelarReservaEstoque();
 		}
+		pedido.getItens().forEach(i -> estoqueDao.salvar(i.getProduto().getEstoque()));
 	}
 	
 	private void processaPedido(StatusPagamento statusPagamento, Pedido pedido) {
 		if(statusPagamento.equals(StatusPagamento.SUCESSO)) {
-			pedidoDao.fechar(pedido);
+			pedido.fechar();
 		} else {
-			pedidoDao.cancelar(pedido);
+			pedido.cancelar();
 		}
+		pedidoDao.salvar(pedido);
 	}
-
 }
