@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.fiap.spo.dao.repository.EstoqueRepository;
 import br.com.fiap.spo.exception.ErroAoAcessarDatabaseException;
-import br.com.fiap.spo.exception.StatusPedidoInvalidoException;
 import br.com.fiap.spo.model.Estoque;
-import br.com.fiap.spo.model.Pedido;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 

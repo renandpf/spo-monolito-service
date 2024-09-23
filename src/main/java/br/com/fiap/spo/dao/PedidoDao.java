@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import br.com.fiap.spo.dao.repository.ItemRepository;
 import br.com.fiap.spo.dao.repository.PedidoRepository;
 import br.com.fiap.spo.exception.ErroAoAcessarDatabaseException;
-import br.com.fiap.spo.exception.StatusPedidoInvalidoException;
 import br.com.fiap.spo.model.ItemId;
 import br.com.fiap.spo.model.Pedido;
 import lombok.AllArgsConstructor;
@@ -47,34 +46,6 @@ public class PedidoDao {
 		}
 	}
 
-	public void fechar(Pedido pedido) {
-		try {
-			pedido.fechar();
-			pedidoRepository.save(pedido);
-			
-		} catch (StatusPedidoInvalidoException e) {
-			throw e;
-		
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new ErroAoAcessarDatabaseException();
-		}
-		
-	}
-
-	public void cancelar(Pedido pedido) {
-		try {
-			pedido.cancelar();
-			pedidoRepository.save(pedido);
-			
-		} catch (StatusPedidoInvalidoException e) {
-			throw e;
-		
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new ErroAoAcessarDatabaseException();
-		}
-	}
 
 	public Long salvar(Pedido pedido) {
 		try {
