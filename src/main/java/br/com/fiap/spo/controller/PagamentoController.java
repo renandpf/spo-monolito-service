@@ -19,8 +19,6 @@ public class PagamentoController {
 
 	private PagamentoService pagamentoService;
 	
-	//TODO: testar esse fluxo inteiro
-	
 	@PostMapping("pagamentos/checkout/{pagamentoExternoId}")
 	public void checkout(@PathVariable final String pagamentoExternoId) {
 		log.info("Start pagamentoExternoId={}", pagamentoExternoId);
