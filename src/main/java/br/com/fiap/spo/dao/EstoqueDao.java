@@ -1,5 +1,6 @@
 package br.com.fiap.spo.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
@@ -30,6 +31,16 @@ public class EstoqueDao {
 	public long salvar(Estoque estoque) {
 		try {
 			return estoqueRepository.save(estoque).getProdutoId();
+			
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new ErroAoAcessarDatabaseException();
+		}
+	}
+
+	public List<Estoque> listar() {
+		try {
+			return estoqueRepository.findAll();
 			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
