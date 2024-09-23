@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 
 import br.com.fiap.spo.dao.EstoqueDao;
 import br.com.fiap.spo.dao.PedidoDao;
-import br.com.fiap.spo.exception.QuantidadeSolicitadaExcedeDisponivelException;
+import br.com.fiap.spo.exception.EstoqueNaoEncontradoException;
+import br.com.fiap.spo.model.Estoque;
 import br.com.fiap.spo.model.Pedido;
 import br.com.fiap.spo.model.Produto;
 import br.com.fiap.spo.pagamento.PagamentoExternoPort;
@@ -27,31 +28,32 @@ public class PedidoService {
 	@Transactional
 	public Long criar(Pedido pedido) {
 		
+		reservarEstoque(pedido);
+		
+		solictaPagamentoExterno(pedido);
+		
+		return pedidoDao.criar(pedido);
+	}
+
+
+	private void solictaPagamentoExterno(Pedido pedido) {
+		final String identificadorPagamentoExterno = pagamentoExterno.solicitacaoPagamento(pedido);
+		pedido.setIdentificadorPagamentoExterno(identificadorPagamentoExterno);
+	}
+
+
+	private void reservarEstoque(Pedido pedido) {
 		Map<Produto, Long> produtosQuantidade = pedido.getQuantidades();
 		
 		produtosQuantidade.entrySet().stream().forEach(es -> {
 			Produto produto = es.getKey();
 			Long quantidadeSolicitada = es.getValue();
 			
-			verificaQuantidadeDisponivel(produto, quantidadeSolicitada);
+			var estoqueOp = estoqueDao.obtemPorId(produto.getId());
+			Estoque estoque = estoqueOp.orElseThrow(EstoqueNaoEncontradoException::new);
+			estoque.adicionarReserva(quantidadeSolicitada);
 			
-			estoqueDao.reserva(produto, quantidadeSolicitada);
+			estoqueDao.salvar(estoque);
 		});
-		
-		final String identificadorPagamentoExterno = pagamentoExterno.solicitacaoPagamento(pedido);
-		pedido.setIdentificadorPagamentoExterno(identificadorPagamentoExterno);
-		
-		return pedidoDao.criar(pedido);
 	}
-
-
-	private void verificaQuantidadeDisponivel(Produto produto, Long quantidadeSolicitada) {
-		Long quantidadeDisponivel = estoqueDao.obtemQuantidadeDisponivel(produto);
-		if(quantidadeSolicitada > quantidadeDisponivel) {
-			log.warn("Quantidade solicitada excede o valor disponível: quantidadeSolicitada={}, quantidadeDisponivel={}", 
-					quantidadeSolicitada, quantidadeDisponivel);
-			throw new QuantidadeSolicitadaExcedeDisponivelException();
-		}
-	}
-
 }

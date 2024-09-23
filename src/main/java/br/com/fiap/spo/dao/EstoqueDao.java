@@ -1,5 +1,7 @@
 package br.com.fiap.spo.dao;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Component;
 
 import br.com.fiap.spo.dao.repository.EstoqueRepository;
@@ -19,44 +21,6 @@ public class EstoqueDao {
 
 	private final EstoqueRepository estoqueRepository;
 	
-	public Long obtemQuantidadeDisponivel(Produto produto) {
-		try {
-			Estoque estoque = getEstoqueById(produto);
-			
-			//Esta regra poderia estar dentro do model. Proposital ficou aqui pra simular um "legado".
-			return estoque.getQuantidadeDisponivel() - estoque.getQuantidadeReservada();
-			
-		} catch (EstoqueNaoEncontradoException e) {
-			log.warn("Estoque não encontrado. id={}", produto.getId());
-			throw e;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new ErroAoAcessarDatabaseException();
-		}
-		
-	}
-
-	public void reserva(Produto produto, Long quantidadeSolicitada) {
-		try {
-			Estoque estoque = getEstoqueById(produto);
-			estoque.adicionarReserva(quantidadeSolicitada);
-			
-			estoqueRepository.save(estoque);
-			
-		} catch (EstoqueNaoEncontradoException e) {
-			log.warn("Estoque não encontrado. id={}", produto.getId());
-			throw e;
-		} catch (Exception e) {
-			log.error(e.getMessage(), e);
-			throw new ErroAoAcessarDatabaseException();
-		}
-	}
-	
-	private Estoque getEstoqueById(Produto produto) {
-		return estoqueRepository.findById(produto.getId())
-		.orElseThrow(EstoqueNaoEncontradoException::new);
-	}
-
 	public void efetuarBaixa(Pedido pedido) {
 		try {
 			pedido.efetuarBaixaEstoque();
@@ -79,6 +43,26 @@ public class EstoqueDao {
 		} catch (StatusPedidoInvalidoException e) {
 			throw e;
 		
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new ErroAoAcessarDatabaseException();
+		}
+	}
+
+	public Optional<Estoque> obtemPorId(Long id) {
+		try {
+			return estoqueRepository.findById(id);
+			
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw new ErroAoAcessarDatabaseException();
+		}
+	}
+
+	public long salvar(Estoque estoque) {
+		try {
+			return estoqueRepository.save(estoque).getProdutoId();
+			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new ErroAoAcessarDatabaseException();

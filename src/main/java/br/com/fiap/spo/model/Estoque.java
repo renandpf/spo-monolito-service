@@ -1,5 +1,6 @@
 package br.com.fiap.spo.model;
 
+import br.com.fiap.spo.exception.QuantidadeSolicitadaExcedeDisponivelException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -7,11 +8,13 @@ import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Slf4j
 public class Estoque {
 	@Id
 	private Long produtoId;
@@ -23,9 +26,17 @@ public class Estoque {
     @JoinColumn(name = "produtoId", insertable = false, updatable = false)
     private Produto produto;
     
+    public Long obterQuantidadeDisponivel() {
+    	return quantidadeDisponivel - quantidadeReservada;
+    }
     
     public void adicionarReserva(Long quantidade) {
-    	quantidadeReservada += quantidade;
+    	if(obterQuantidadeDisponivel() >= quantidade) {
+    		quantidadeReservada += quantidade;
+    	} else {
+    		log.warn("Quantidade solicitada excede disponivel");
+    		throw new QuantidadeSolicitadaExcedeDisponivelException();
+    	}
     }
     
     public void efetuarBaixa(Long quantidade) {
