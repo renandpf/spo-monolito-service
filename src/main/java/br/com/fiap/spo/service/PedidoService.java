@@ -50,7 +50,10 @@ public class PedidoService {
 			Long quantidadeSolicitada = es.getValue();
 			
 			var estoqueOp = estoqueDao.obtemPorId(produto.getId());
-			Estoque estoque = estoqueOp.orElseThrow(EstoqueNaoEncontradoException::new);
+			Estoque estoque = estoqueOp.orElseThrow(() -> {
+				log.warn("Estoque não encontrado");
+				return new EstoqueNaoEncontradoException();
+			});
 			estoque.adicionarReserva(quantidadeSolicitada);
 			
 			estoqueDao.salvar(estoque);
