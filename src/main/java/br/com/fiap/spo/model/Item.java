@@ -2,7 +2,6 @@ package br.com.fiap.spo.model;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
