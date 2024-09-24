@@ -1,0 +1,33 @@
+-- H2 Database Script
+
+CREATE TABLE IF NOT EXISTS Produto (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(100) NOT NULL,
+  valor DOUBLE NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS Pedido (
+  id BIGINT NOT NULL AUTO_INCREMENT,
+  dataHora TIMESTAMP NOT NULL,
+  status INT NOT NULL,
+  identificadorPagamentoExterno VARCHAR(100) NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS Item (
+  pedidoId BIGINT NOT NULL,
+  produtoId BIGINT NOT NULL,
+  quantidade INT NOT NULL,
+  PRIMARY KEY (pedidoId, produtoId),
+  FOREIGN KEY (pedidoId) REFERENCES Pedido(id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  FOREIGN KEY (produtoId) REFERENCES Produto(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
+CREATE TABLE IF NOT EXISTS Estoque (
+  produtoId BIGINT NOT NULL,
+  quantidadeDisponivel INT NOT NULL,
+  quantidadeReservada INT NULL,
+  PRIMARY KEY (produtoId),
+  FOREIGN KEY (produtoId) REFERENCES Produto(id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);

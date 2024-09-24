@@ -1,6 +1,6 @@
 package br.com.fiap.spo.model;
 
-import br.com.fiap.spo.exception.QuantidadeSolicitadaExcedeDisponivelException;
+import br.com.fiap.spo.exception.SemEstoqueDisponivelException;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +35,7 @@ public class Estoque {
     		quantidadeReservada += quantidade;
     	} else {
     		log.warn("Quantidade solicitada excede disponivel");
-    		throw new QuantidadeSolicitadaExcedeDisponivelException();
+    		throw new SemEstoqueDisponivelException();
     	}
     }
     

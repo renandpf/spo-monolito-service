@@ -29,7 +29,7 @@ public class PedidoController {
 	
 	@PostMapping("pedidos")
 	@ResponseStatus(HttpStatus.CREATED)
-	public Long criar(@RequestBody(required = true) List<ItemPedidoJson> itensPedido) throws Exception {
+	public Long criar(@RequestBody(required = true) List<ItemPedidoJson> itensPedido) {
 		log.info("Start itensPedido={}", itensPedido);
 		
 		Long pedidoId = pedidoService.criar(mapToPedido(itensPedido));

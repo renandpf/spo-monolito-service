@@ -86,11 +86,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>com.h2database</groupId>
-		    <artifactId>h2</artifactId>
-		    <scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.wiremock</groupId>
 			<artifactId>wiremock</artifactId>
 			<version>3.0.0</version>
@@ -103,13 +98,6 @@
 		</dependency>
 	</dependencies>
 	
-	<repositories>
-    	<repository>
-        	<id>barcode4j</id>
-        	<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
-    	</repository>
-	</repositories>
-
 	<build>
 		<plugins>
 			<plugin>

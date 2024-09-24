@@ -3,7 +3,7 @@ package br.com.fiap.spo.exception;
 import lombok.Getter;
 
 @Getter
-public class QuantidadeSolicitadaExcedeDisponivelException extends SystemBaseException {
+public class SemEstoqueDisponivelException extends SystemBaseException {
 	private static final long serialVersionUID = -4222378474173384839L;
 	
 	private final String code = "spo.monolito.quantidadeExcedeDisponivel";//NOSONAR
