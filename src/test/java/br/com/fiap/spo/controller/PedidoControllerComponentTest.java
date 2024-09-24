@@ -1,6 +1,7 @@
 package br.com.fiap.spo.controller;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Arrays;
@@ -12,9 +13,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import br.com.fiap.spo.controller.json.ItemPedidoJson;
+import br.com.fiap.spo.dao.repository.EstoqueRepository;
 import br.com.fiap.spo.exception.EstoqueNaoEncontradoException;
-import br.com.fiap.spo.exception.ProdutoNaoEncontradoException;
 import br.com.fiap.spo.exception.SemEstoqueDisponivelException;
+import br.com.fiap.spo.model.Estoque;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("component-test")
@@ -22,14 +24,25 @@ class PedidoControllerComponentTest {
 
 	@Autowired
 	private PedidoController pedidoController;
+
+	@Autowired
+	private EstoqueRepository estoqueRepository;
 	
 	@Test
 	void shouldCriarPedidoComSucesso() {
+		final Long idProduto = 1L;
+		Estoque estoque = estoqueRepository.findAll().stream().filter(p -> p.getProdutoId().equals(idProduto)).findAny().get();
+		Long quantidadeReservaEstoque = estoque.getQuantidadeReservada();
+		assertEquals(0, quantidadeReservaEstoque);
+
 		
 		ItemPedidoJson item = new ItemPedidoJson(3L, 1L);
-		Long criar = pedidoController.criar(Arrays.asList(item));
-		assertNotNull(criar);
+		Long pedidoId = pedidoController.criar(Arrays.asList(item));
+		assertNotNull(pedidoId);
 		
+		estoque = estoqueRepository.findAll().stream().filter(p -> p.getProdutoId().equals(idProduto)).findAny().get();
+		quantidadeReservaEstoque = estoque.getQuantidadeReservada();
+		assertEquals(3, quantidadeReservaEstoque);
 	}
 	
 	@Test
