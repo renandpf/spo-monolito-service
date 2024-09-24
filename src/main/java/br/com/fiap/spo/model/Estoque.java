@@ -47,4 +47,9 @@ public class Estoque {
     public void efetuarCancelamento(Long quantidade) {
     	quantidadeReservada -= quantidade;
     }
+
+	public void adicionarItens(Long quantidade) {
+		quantidadeDisponivel += quantidade;
+		
+	}
 }
