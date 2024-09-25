@@ -1,24 +1,31 @@
 package br.com.fiap.spo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import br.com.fiap.spo.dao.EstoqueDao;
 import br.com.fiap.spo.dao.PedidoDao;
 import br.com.fiap.spo.exception.PedidoNaoEncontradoException;
+import br.com.fiap.spo.model.Estoque;
 import br.com.fiap.spo.model.Pedido;
 import br.com.fiap.spo.model.StatusPagamento;
 import br.com.fiap.spo.pagamento.PagamentoExternoPort;
+import br.com.fiap.spo.v2.gateway.EstoqueGateway;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class PagamentoService {
 	
-	private final PagamentoExternoPort pagamentoExternoPort;
-	private EstoqueDao estoqueDao;
+	@Autowired//NOSONAR
+	private PagamentoExternoPort pagamentoExternoPort;
+	
+	@Autowired//NOSONAR
+	@Qualifier("estoqueRestApiGateway")
+	private EstoqueGateway estoqueGateway;
+
+	@Autowired//NOSONAR
 	private PedidoDao pedidoDao;
 
 	@Transactional
@@ -34,10 +41,17 @@ public class PagamentoService {
 
 	private Pedido obterPedido(String pagamentoExternoId) {
 		var pedidoOp = pedidoDao.obterPorPagamentoExternoId(pagamentoExternoId);
-		return pedidoOp.orElseThrow(() -> {
+		Pedido pedido = pedidoOp.orElseThrow(() -> {
 			log.warn("Pedido não encontrado com identificador de pagamento externo. pagamentoExternoId={}", pagamentoExternoId);
 			return new PedidoNaoEncontradoException();
 		});
+		
+		pedido.getItens().forEach(i -> {
+			Estoque estoque = estoqueGateway.obtemPorId(i.getProduto().getId()).get();
+			i.getProduto().setEstoque(estoque);
+		});
+		
+		return pedido;
 	}
 
 	private void processaEstoque(StatusPagamento statusPagamento, Pedido pedido) {
@@ -46,7 +60,7 @@ public class PagamentoService {
 		} else {
 			pedido.cancelarReservaEstoque();
 		}
-		pedido.getItens().forEach(i -> estoqueDao.salvar(i.getProduto().getEstoque()));
+		pedido.getItens().forEach(i -> estoqueGateway.salvar(i.getProduto().getEstoque()));
 	}
 	
 	private void processaPedido(StatusPagamento statusPagamento, Pedido pedido) {

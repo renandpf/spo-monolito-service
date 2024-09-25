@@ -8,17 +8,22 @@ import org.springframework.stereotype.Component;
 import br.com.fiap.spo.dao.repository.EstoqueRepository;
 import br.com.fiap.spo.exception.ErroAoAcessarDatabaseException;
 import br.com.fiap.spo.model.Estoque;
+import br.com.fiap.spo.v2.gateway.EstoqueGateway;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Component
+//@Component
 @AllArgsConstructor
-public class EstoqueDao {
+@Deprecated(forRemoval = true)
+public class EstoqueDao implements EstoqueGateway {
 
 	private final EstoqueRepository estoqueRepository;
 	
+	@Override
 	public Optional<Estoque> obtemPorId(Long id) {
+		log.warn("Esta operação ser decontinuada");
+		//throw new RuntimeException();
 		try {
 			return estoqueRepository.findById(id);
 			
@@ -28,9 +33,12 @@ public class EstoqueDao {
 		}
 	}
 
+	@Override
 	public long salvar(Estoque estoque) {
+		log.warn("Esta operação ser decontinuada");
+		//throw new RuntimeException();
 		try {
-			return estoqueRepository.save(estoque).getProdutoId();
+			return estoqueRepository.save(estoque).getId();
 			
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -38,7 +46,10 @@ public class EstoqueDao {
 		}
 	}
 
+	@Override
 	public List<Estoque> listar() {
+		log.warn("Esta operação ser decontinuada");
+		//throw new RuntimeException();
 		try {
 			return estoqueRepository.findAll();
 			

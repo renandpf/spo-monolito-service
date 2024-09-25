@@ -1,9 +1,17 @@
 package br.com.fiap.spo.dao.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+import java.util.Optional;
 
 import br.com.fiap.spo.model.Estoque;
 
-public interface EstoqueRepository extends JpaRepository<Estoque, Long> {
+@Deprecated(forRemoval = true)
+public interface EstoqueRepository /*extends JpaRepository<Estoque, Long>*/ {
+
+	Optional<Estoque> findById(Long id);
+
+	Estoque save(Estoque estoque);
+
+	List<Estoque> findAll();
 
 }

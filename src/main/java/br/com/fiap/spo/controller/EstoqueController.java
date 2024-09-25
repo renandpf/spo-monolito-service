@@ -21,10 +21,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping
 @RestController
 @AllArgsConstructor
+@Deprecated(forRemoval = true)
 public class EstoqueController {
 
 	private EstoqueService estoqueService;
 	
+	@Deprecated
 	@GetMapping("estoques")
 	public List<EstoqueJson> listar(){
 		log.info("Start");
@@ -33,7 +35,7 @@ public class EstoqueController {
 		List<EstoqueJson> estoquesJson = estoques.stream()
 			.map(e -> 
 				new EstoqueJson(
-						e.getProdutoId(), 
+						e.getId(), 
 						e.getProduto().getNome(), 
 						e.getQuantidadeDisponivel(), 
 						e.getQuantidadeReservada())).toList();
@@ -43,6 +45,7 @@ public class EstoqueController {
 		return estoquesJson;
 	}
 	
+	@Deprecated
 	@PatchMapping("estoques/{id}")
 	public void adicionar(@PathVariable Long id, @RequestBody(required = true) EstoqueJson estoqueJson){
 		log.info("Start");

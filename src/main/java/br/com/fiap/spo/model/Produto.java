@@ -9,10 +9,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -26,7 +27,8 @@ public class Produto {
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
 	private List<Item> itens;
 	
-	@OneToOne(mappedBy = "produto")
+	@Transient
+	@Setter
 	private Estoque estoque;
 	
 	private String nome;

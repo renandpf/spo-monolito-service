@@ -1,29 +1,21 @@
 package br.com.fiap.spo.model;
 
 import br.com.fiap.spo.exception.SemEstoqueDisponivelException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@Entity
 @Getter
+@Slf4j
 @AllArgsConstructor
 @NoArgsConstructor
-@Slf4j
 public class Estoque {
-	@Id
-	private Long produtoId;
+	private Long id;
 
 	private Long quantidadeDisponivel;
 	private Long quantidadeReservada;
 	
-    @OneToOne
-    @JoinColumn(name = "produtoId", insertable = false, updatable = false)
     private Produto produto;
     
     public Long obterQuantidadeDisponivel() {

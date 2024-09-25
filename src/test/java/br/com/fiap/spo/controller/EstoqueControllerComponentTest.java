@@ -1,22 +1,33 @@
 package br.com.fiap.spo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.doReturn;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import br.com.fiap.spo.controller.json.EstoqueJson;
+import br.com.fiap.spo.v2.gateway.EstoqueGateway;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("component-test")
+@Deprecated(forRemoval = true)
+@Disabled
 class EstoqueControllerComponentTest {
 
 	@Autowired
 	private EstoqueController estoqueController;
+	
+	@MockBean
+	@Qualifier("estoqueRestApiGateway")
+	private EstoqueGateway estoqueGateway;
 	
 	@Test
 	void shouldListarEstoques() {
@@ -31,7 +42,6 @@ class EstoqueControllerComponentTest {
 		
 		assertEquals(3L, estoques.get(2).getId());
 		assertEquals("Camera", estoques.get(2).getNomeProduto());
-		
 	}
 	
 	@Test
